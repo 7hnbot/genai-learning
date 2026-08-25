@@ -24,6 +24,13 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Ranked documents by semantic relevance
 - Implemented Top-K retrieval
 
+### 04 — Vector Database
+- Used ChromaDB for vector storage and retrieval
+- Stored documents with embeddings
+- Added document metadata
+- Performed similarity-based Top-K retrieval
+- Explored vector distance and relevance ranking
+
 ## Tech Stack
 
 - Python
@@ -35,4 +42,4 @@ Hands-on learning journey into Generative AI and AI Engineering.
 ## Roadmap
 
 LLMs
-→ Embeddings → Semantic Search → RAG → Tool Calling → AI Agents → MCP → Deployment
+→ Embeddings → Semantic Search → Vector Database → RAG → Tool Calling → AI Agents → MCP → Deployment
