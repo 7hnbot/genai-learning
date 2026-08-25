@@ -31,6 +31,12 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Performed similarity-based Top-K retrieval
 - Explored vector distance and relevance ranking
 
+### 05 — RAG
+- Connected Chroma vector retrieval with an LLM
+- Retrieved relevant context before generation
+- Implemented context-grounded responses
+- Added fallback behavior when information is unavailable
+
 ## Tech Stack
 
 - Python
