@@ -26,9 +26,26 @@ results = collection.query(
     n_results=2
 )
 
-retrieved_documents = results["documents"][0]
+distances = results["distances"][0]
+best_distance = distances[0]
+if best_distance > 0.8:
+    print("I don't have enough information to answer this question.")
+    exit()
 
-context = "\n\n".join(retrieved_documents)
+retrieved_documents = results["documents"][0]
+retrieved_metadata = results["metadatas"][0]
+context_parts = []
+
+for document, metadata in zip(
+    retrieved_documents,
+    retrieved_metadata
+):
+    context_parts.append(
+        f"[Source: {metadata['source']} | Topic: {metadata['topic']}]\n"
+        f"{document}"
+    )
+
+context = "\n\n".join(context_parts)
 
 prompt = f"""
 Answer the question using only the provided context.
@@ -55,3 +72,11 @@ response = client.chat.completions.create(
 )
 
 print("\nAI:", response.choices[0].message.content)
+
+print("\nSources:")
+
+for metadata in retrieved_metadata:
+    print(
+        f"- {metadata['source']} "
+        f"({metadata['topic']})"
+    )
