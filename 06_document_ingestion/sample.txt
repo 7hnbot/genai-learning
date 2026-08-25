@@ -1,0 +1,13 @@
+TCP is a connection-oriented protocol that provides reliable communication.
+
+TCP establishes a connection before data transfer begins.
+
+TCP uses sequence numbers to keep track of transmitted data and ensure that data can be reassembled in the correct order.
+
+TCP uses acknowledgements to confirm that data has been received successfully.
+
+When packets are lost, TCP can retransmit them.
+
+TCP uses flow control to prevent a sender from overwhelming the receiver.
+
+TCP also uses congestion control to manage network traffic and reduce congestion.
