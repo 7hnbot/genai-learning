@@ -39,6 +39,13 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Added source metadata and attribution
 - Added fallback behavior for insufficient information
 
+### 06 — Document Ingestion
+- Built a document ingestion pipeline
+- Implemented sentence-based chunking
+- Added chunk overlap to preserve context
+- Stored chunks in ChromaDB
+- Added metadata for source tracking
+
 ## Tech Stack
 
 - Python
