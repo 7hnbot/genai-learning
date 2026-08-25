@@ -18,6 +18,12 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Semantic similarity
 - Cosine similarity
 
+### 03 — Semantic Search
+- Converted documents and queries into embeddings
+- Calculated cosine similarity
+- Ranked documents by semantic relevance
+- Implemented Top-K retrieval
+
 ## Tech Stack
 
 - Python
