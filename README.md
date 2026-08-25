@@ -35,7 +35,9 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Connected Chroma vector retrieval with an LLM
 - Retrieved relevant context before generation
 - Implemented context-grounded responses
-- Added fallback behavior when information is unavailable
+- Added similarity thresholding
+- Added source metadata and attribution
+- Added fallback behavior for insufficient information
 
 ## Tech Stack
 
