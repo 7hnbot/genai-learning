@@ -2,7 +2,13 @@
 
 Hands-on learning journey into Generative AI and AI Engineering.
 
-## Current Progress
+## Current Project
+
+Built a PDF-based RAG chatbot that can retrieve relevant
+information from a large document and generate grounded
+answers using Gemini through OpenRouter.
+
+The current implementation uses a Computer Networks PDF as the knowledge source.
 
 ### 01 — LLM Applications
 - OpenRouter API
@@ -66,5 +72,4 @@ the ingestion pipeline.
 
 ## Roadmap
 
-LLMs
-→ Embeddings → Semantic Search → Vector Database → RAG → Tool Calling → AI Agents → MCP → Deployment
+LLMs → Embeddings → Semantic Search → Vector Database → RAG → Tool Calling → AI Agents → MCP → Deployment
