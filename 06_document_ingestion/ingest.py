@@ -76,14 +76,7 @@ for page_number, page in enumerate(reader.pages, start=1):
             "chunk_id": chunk_number
         })
 
-for chunk in all_chunks[:10]:
-    print(
-        f"Page: {chunk['page']} | "
-        f"Chunk: {chunk['chunk_id']} | "
-        f"Length: {len(chunk['text'])}"
-    )
-
-"""chroma_client = chromadb.PersistentClient(
+chroma_client = chromadb.PersistentClient(
     path="./04_vector_database/chroma_db"
 )
 
@@ -112,7 +105,7 @@ collection.add(
     ]
 )
 
-query = "How does TCP provide reliable communication?"
+"""query = "How does TCP provide reliable communication?"
 
 results = collection.query(
     query_texts=[query],
