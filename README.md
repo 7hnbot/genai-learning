@@ -38,18 +38,17 @@ Hands-on learning journey into Generative AI and AI Engineering.
 - Added similarity thresholding
 - Added source metadata and attribution
 - Added fallback behavior for insufficient information
+- Connected the RAG pipeline to Gemini through OpenRouter
 
 ### 06 — Document Ingestion
 - Built a document ingestion pipeline
-- Implemented sentence-based chunking
-- Added chunk overlap to preserve context
-- Stored chunks in ChromaDB
-- Added metadata for source tracking
-- Added PDF text extraction with PyPDF
-- Preserved page-level metadata
-- Improved chunking with sentence-aware splitting
-- Added sentence overlap between chunks
-- Tested retrieval quality on a 1,000+ chunk PDF dataset
+- Added PDF text extraction using PyPDF
+- Implemented PDF text cleaning
+- Implemented sentence-aware chunking
+- Added sentence overlap to preserve context
+- Stored document chunks and embeddings in ChromaDB
+- Preserved source, page, and chunk metadata
+- Tested ingestion and retrieval on a 1,000+ chunk PDF dataset
 
 ## Tech Stack
 
