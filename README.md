@@ -18,8 +18,8 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 4. Create a `.env` file
 5. Add your OpenRouter API key (or others):
 
-OPENROUTER_API_KEY=your_api_key_here
-OPENROUTER_MODEL=your_preferred_model
+- OPENROUTER_API_KEY=your_api_key_here
+- OPENROUTER_MODEL=your_preferred_model
 
 6. Place your PDF inside `06_document_ingestion/`
 7. Run the ingestion script once
