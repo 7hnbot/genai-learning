@@ -10,6 +10,21 @@ answers using Gemini through OpenRouter.
 
 The current implementation uses a Computer Networks PDF as the knowledge source.
 
+## Setup
+
+1. Clone the repository
+2. Create and activate a virtual environment
+3. Install dependencies
+4. Create a `.env` file
+5. Add your OpenRouter API key (or others):
+
+OPENROUTER_API_KEY=your_api_key_here
+OPENROUTER_MODEL=your_preferred_model
+
+6. Place your PDF inside `06_document_ingestion/`
+7. Run the ingestion script once
+8. Run the RAG script to ask questions
+
 ### 01 — LLM Applications
 - OpenRouter API
 - Gemini
