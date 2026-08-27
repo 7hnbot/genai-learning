@@ -16,14 +16,14 @@ chroma_client = chromadb.PersistentClient(
 )
 
 collection = chroma_client.get_collection(
-    name="computer_networks"
+    name="computer_networks_pdf"
 )
 
 query = input("Ask a question: ")
 
 results = collection.query(
     query_texts=[query],
-    n_results=2
+    n_results=3
 )
 
 distances = results["distances"][0]
@@ -41,7 +41,7 @@ for document, metadata in zip(
     retrieved_metadata
 ):
     context_parts.append(
-        f"[Source: {metadata['source']} | Topic: {metadata['topic']}]\n"
+        f"[Source: {metadata['source']} | Page: {metadata['page']}]\n"
         f"{document}"
     )
 
@@ -78,5 +78,5 @@ print("\nSources:")
 for metadata in retrieved_metadata:
     print(
         f"- {metadata['source']} "
-        f"({metadata['topic']})"
+        f"(Page {metadata['page']})"
     )
