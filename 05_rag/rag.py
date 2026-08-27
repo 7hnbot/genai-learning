@@ -49,7 +49,7 @@ context = "\n\n".join(context_parts)
 
 prompt = f"""
 Answer the question using only the provided context.
-
+Answer in plain text without Markdown formatting.
 Context:
 {context}
 
@@ -61,7 +61,7 @@ say that you don't have enough information.
 """
 
 response = client.chat.completions.create(
-    model="google/gemini-3.7-flash",
+    model = os.getenv("OPENROUTER_MODEL"),
     max_tokens=2000,
     messages=[
         {
