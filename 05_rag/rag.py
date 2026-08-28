@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
+DISTANCE_THRESHOLD = 0.8
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -28,22 +29,28 @@ results = collection.query(
 
 distances = results["distances"][0]
 best_distance = distances[0]
-if best_distance > 0.8:
+if best_distance > DISTANCE_THRESHOLD:
     print("I don't have enough information to answer this question.")
     exit()
 
 retrieved_documents = results["documents"][0]
 retrieved_metadata = results["metadatas"][0]
-context_parts = []
 
-for document, metadata in zip(
+context_parts = []
+filtered_metadata = []
+
+for document, metadata, distance in zip(
     retrieved_documents,
-    retrieved_metadata
+    retrieved_metadata,
+    distances
 ):
-    context_parts.append(
-        f"[Source: {metadata['source']} | Page: {metadata['page']}]\n"
-        f"{document}"
-    )
+    if distance <= DISTANCE_THRESHOLD:
+        context_parts.append(
+            f"[Source: {metadata['source']} | Page: {metadata['page']}]\n"
+            f"{document}"
+        )
+
+        filtered_metadata.append(metadata)
 
 context = "\n\n".join(context_parts)
 
@@ -75,7 +82,7 @@ print("\nAI:", response.choices[0].message.content)
 
 print("\nSources:")
 
-for metadata in retrieved_metadata:
+for metadata in filtered_metadata:
     print(
         f"- {metadata['source']} "
         f"(Page {metadata['page']})"

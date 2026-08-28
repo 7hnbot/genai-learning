@@ -89,21 +89,27 @@ collection = chroma_client.get_or_create_collection(
     name="computer_networks_pdf"
 )
 
-collection.add(
-    documents=[chunk["text"] for chunk in all_chunks],
-    ids=[
-        f"page_{chunk['page']}_chunk_{chunk['chunk_id']}"
-        for chunk in all_chunks
-    ],
-    metadatas=[
-        {
-            "source": "computer_networks.pdf",
-            "page": chunk["page"],
-            "chunk_id": chunk["chunk_id"]
-        }
-        for chunk in all_chunks
-    ]
-)
+batch_size = 5000
+
+for i in range(0, len(all_chunks), batch_size):
+    end = i + batch_size
+    batch = all_chunks[i:end]
+    collection.add(
+        documents=[chunk["text"] for chunk in batch],
+        ids=[
+            f"page_{chunk['page']}_chunk_{chunk['chunk_id']}"
+            for chunk in batch
+        ],
+        metadatas=[
+            {
+                "source": "computer_networks.pdf",
+                "page": chunk["page"],
+                "chunk_id": chunk["chunk_id"]
+            }
+            for chunk in batch
+        ]
+    )
+    print(f"Added chunks {i} to {min(end, len(all_chunks))}")
 
 """query = "How does TCP provide reliable communication?"
 
