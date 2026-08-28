@@ -60,6 +60,7 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Added source metadata and attribution
 - Added fallback behavior for insufficient information
 - Connected the RAG pipeline to Gemini through OpenRouter
+- Evaluated retrieval using Recall@K, Precision@K, and MRR
 
 ### 06 — Document Ingestion
 - Built a document ingestion pipeline
@@ -69,7 +70,8 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Added sentence overlap to preserve context
 - Stored document chunks and embeddings in ChromaDB
 - Preserved source, page, and chunk metadata
-- Tested ingestion and retrieval on a 1,000+ chunk PDF dataset
+- Tested different chunk sizes for retrieval quality
+- Tested ingestion and retrieval on a 3,000+ chunk PDF dataset
 
 ## Tech Stack
 
