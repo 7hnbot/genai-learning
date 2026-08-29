@@ -14,5 +14,33 @@ evaluation_questions = [
     {
         "question": "What are the three tools used for TCP error detection and correction?",
         "expected_pages": [768, 757]
+    },
+    {
+        "question": "What is the main responsibility of the transport layer?",
+        "expected_pages": [738]
+    },
+    {
+        "question": "What is flow control?",
+        "expected_pages": [348]
+    },
+    {
+        "question": "What is congestion control?",
+        "expected_pages": [802, 805, 828]
+    },
+    {
+        "question": "How does TCP establish a connection?",
+        "expected_pages": [760]
+    },
+    {
+        "question": "What is DNS?",
+        "expected_pages": [840, 1117, 1118]
+    },
+    {
+        "question": "What is the purpose of acknowledgments in TCP?",
+        "expected_pages": [757]
+    },
+    {
+        "question": "What is the purpose of a checksum?",
+        "expected_pages": [335, 338, 748]
     }
 ]

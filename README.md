@@ -83,21 +83,21 @@ The evaluation compares:
 - Vector search
 - Cross-encoder reranked search
 
-Current evaluation uses 4 test questions from the Computer Networks PDF.
+Current evaluation uses 10 test questions from the Computer Networks PDF.
 
 ### Overall Results
 
 | Metric | Vector Search | Reranked Search |
 |---|---:|---:|
-| Recall@1 | 0.2875 | 0.2375 |
-| Recall@3 | 0.5000 | 0.5625 |
-| Recall@5 | 0.6000 | 0.6125 |
-| Precision@1 | 1.0000 | 0.7500 |
-| Precision@3 | 0.7500 | 0.8333 |
-| Precision@5 | 0.6000 | 0.6000 |
-| MRR | 1.0000 | 0.8750 |
+| Recall@1 | 0.4379 | 0.5409 |
+| Recall@3 | 0.6970 | 0.8409 |
+| Recall@5 | 0.7939 | 0.8591 |
+| Precision@1 | 0.8182 | 0.9091 |
+| Precision@3 | 0.6364 | 0.7576 |
+| Precision@5 | 0.4727 | 0.5091 |
+| MRR | 0.9091 | 0.9545 |
 
-Reranking improved Recall@3, Recall@5, and Precision@3, while some Top-1 metrics decreased. Results are based on a small evaluation set and will be expanded with more test questions.
+Reranking improved Recall@1, Recall@3, Recall@5, Precision@1, Precision@3, Precision@5, and MRR on the current evaluation dataset. Results are based on a manually created evaluation set and can be further improved by adding more diverse test questions.
 
 ## Tech Stack
 
