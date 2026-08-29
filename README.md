@@ -74,30 +74,41 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Tested different chunk sizes for retrieval quality
 - Tested ingestion and retrieval on a 3,000+ chunk PDF dataset
 
-## Retrieval Evaluation
+## Query Expansion Experiment
 
-The retrieval pipeline was evaluated using Recall@K, Precision@K, and MRR.
+Query expansion was tested as an additional retrieval technique.
 
-The evaluation compares:
+For each user question, an LLM generated alternative versions of the original query. The original query and expanded queries were searched separately, and the retrieved candidates were combined and deduplicated before cross-encoder reranking.
 
-- Vector search
-- Cross-encoder reranked search
+Pipeline:
 
-Current evaluation uses 10 test questions from the Computer Networks PDF.
+Original Question
+→ Generate alternative queries
+→ Multiple vector searches
+→ Combine candidates
+→ Deduplicate identical chunks
+→ Cross-encoder reranking
+→ Final top results
 
-### Overall Results
+### Evaluation Results
 
-| Metric | Vector Search | Reranked Search |
-|---|---:|---:|
-| Recall@1 | 0.4379 | 0.5409 |
-| Recall@3 | 0.6970 | 0.8409 |
-| Recall@5 | 0.7939 | 0.8591 |
-| Precision@1 | 0.8182 | 0.9091 |
-| Precision@3 | 0.6364 | 0.7576 |
-| Precision@5 | 0.4727 | 0.5091 |
-| MRR | 0.9091 | 0.9545 |
+| Metric | Vector Search | Reranked Search | Query Expansion + Reranking |
+|---|---:|---:|---:|
+| Recall@1 | 0.4379 | 0.5409 | 0.5591 |
+| Recall@3 | 0.6970 | 0.8409 | 0.7758 |
+| Recall@5 | 0.7939 | 0.8591 | 0.8121 |
+| Precision@1 | 0.8182 | 0.9091 | 1.0000 |
+| Precision@3 | 0.6364 | 0.7576 | 0.7576 |
+| Precision@5 | 0.4727 | 0.5091 | 0.5091 |
+| MRR | 0.9091 | 0.9545 | 1.0000 |
 
-Reranking improved Recall@1, Recall@3, Recall@5, Precision@1, Precision@3, Precision@5, and MRR on the current evaluation dataset. Results are based on a manually created evaluation set and can be further improved by adding more diverse test questions.
+### Findings
+
+Query expansion improved Top-1 retrieval quality, achieving the highest Recall@1, Precision@1, and MRR.
+
+However, the standard reranking pipeline achieved better Recall@3 and Recall@5. This shows that query expansion can improve the best-ranked result but does not necessarily improve broader retrieval coverage.
+
+The experiment also showed that query expansion adds an additional LLM API call and can occasionally produce incomplete or empty responses, so fallback handling was added to prevent failures.
 
 ## Tech Stack
 
