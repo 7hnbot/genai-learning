@@ -56,11 +56,11 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Connected Chroma vector retrieval with an LLM
 - Retrieved relevant context before generation
 - Implemented context-grounded responses
-- Added similarity thresholding
 - Added source metadata and attribution
 - Added fallback behavior for insufficient information
 - Connected the RAG pipeline to Gemini through OpenRouter
-- Cross-encoder reranking
+- Added cross-encoder reranking to improve retrieval relevance
+- Added reranker-based relevance filtering for insufficient-information detection
 - Evaluated retrieval using Recall@K, Precision@K, and MRR
 
 ### 06 — Document Ingestion

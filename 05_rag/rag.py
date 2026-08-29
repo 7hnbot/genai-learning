@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
-DISTANCE_THRESHOLD = 0.8
+RERANK_THRESHOLD = 0.0
 
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
@@ -32,52 +32,39 @@ results = collection.query(
 )
 
 distances = results["distances"][0]
-best_distance = distances[0]
-if best_distance > DISTANCE_THRESHOLD:
-    print("I don't have enough information to answer this question.")
-    exit()
-
 retrieved_documents = results["documents"][0]
 retrieved_metadata = results["metadatas"][0]
-
-# Filter candidates using the distance threshold
-filtered_results = []
-
-for document, metadata, distance in zip(
-    retrieved_documents,
-    retrieved_metadata,
-    distances
-):
-    if distance <= DISTANCE_THRESHOLD:
-        filtered_results.append(
-            (document, metadata, distance)
-        )
 
 # Create question-document pairs for reranking
 pairs = [
     [query, document]
-    for document, metadata, distance in filtered_results
+    for document in retrieved_documents
 ]
 
 # Get relevance scores from the cross-encoder
 rerank_scores = reranker.predict(pairs)
 
 # Combine reranking scores with documents and metadata
-reranked_results = []
-
-for score, (document, metadata, distance) in zip(
-    rerank_scores,
-    filtered_results
-):
-    reranked_results.append(
-        (score, document, metadata, distance)
+reranked_results = list(
+    zip(
+        rerank_scores,
+        retrieved_documents,
+        retrieved_metadata,
+        distances
     )
+)
 
 # Sort by reranker score (highest first)
 reranked_results.sort(
     key=lambda x: x[0],
     reverse=True
 )
+
+best_rerank_score = reranked_results[0][0]
+
+if best_rerank_score < RERANK_THRESHOLD:
+    print("I don't have enough information to answer this question.")
+    exit()
 
 # Keep the best 3 results
 reranked_results = reranked_results[:3]
