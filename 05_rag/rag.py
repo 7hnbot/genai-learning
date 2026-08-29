@@ -1,6 +1,6 @@
 import os
 import chromadb
-
+from sentence_transformers import CrossEncoder
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -20,11 +20,15 @@ collection = chroma_client.get_collection(
     name="computer_networks_pdf"
 )
 
+reranker = CrossEncoder(
+    "cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+
 query = input("Ask a question: ")
 
 results = collection.query(
     query_texts=[query],
-    n_results=3
+    n_results=10
 )
 
 distances = results["distances"][0]
@@ -36,8 +40,8 @@ if best_distance > DISTANCE_THRESHOLD:
 retrieved_documents = results["documents"][0]
 retrieved_metadata = results["metadatas"][0]
 
-context_parts = []
-filtered_metadata = []
+# Filter candidates using the distance threshold
+filtered_results = []
 
 for document, metadata, distance in zip(
     retrieved_documents,
@@ -45,12 +49,58 @@ for document, metadata, distance in zip(
     distances
 ):
     if distance <= DISTANCE_THRESHOLD:
-        context_parts.append(
-            f"[Source: {metadata['source']} | Page: {metadata['page']}]\n"
-            f"{document}"
+        filtered_results.append(
+            (document, metadata, distance)
         )
 
-        filtered_metadata.append(metadata)
+# Create question-document pairs for reranking
+pairs = [
+    [query, document]
+    for document, metadata, distance in filtered_results
+]
+
+# Get relevance scores from the cross-encoder
+rerank_scores = reranker.predict(pairs)
+
+# Combine reranking scores with documents and metadata
+reranked_results = []
+
+for score, (document, metadata, distance) in zip(
+    rerank_scores,
+    filtered_results
+):
+    reranked_results.append(
+        (score, document, metadata, distance)
+    )
+
+# Sort by reranker score (highest first)
+reranked_results.sort(
+    key=lambda x: x[0],
+    reverse=True
+)
+
+# Keep the best 3 results
+reranked_results = reranked_results[:3]
+print("\nReranked results:")
+for score, document, metadata, distance in reranked_results:
+    print(
+        f"Score: {score:.4f} | "
+        f"Distance: {distance:.4f} | "
+        f"Page: {metadata['page']}"
+    )
+
+# Build context using only the top reranked results
+context_parts = []
+filtered_metadata = []
+
+for score, document, metadata, distance in reranked_results:
+
+    context_parts.append(
+        f"[Source: {metadata['source']} | Page: {metadata['page']}]\n"
+        f"{document}"
+    )
+
+    filtered_metadata.append(metadata)
 
 context = "\n\n".join(context_parts)
 

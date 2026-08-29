@@ -60,6 +60,7 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Added source metadata and attribution
 - Added fallback behavior for insufficient information
 - Connected the RAG pipeline to Gemini through OpenRouter
+- Cross-encoder reranking
 - Evaluated retrieval using Recall@K, Precision@K, and MRR
 
 ### 06 — Document Ingestion
@@ -72,6 +73,31 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Preserved source, page, and chunk metadata
 - Tested different chunk sizes for retrieval quality
 - Tested ingestion and retrieval on a 3,000+ chunk PDF dataset
+
+## Retrieval Evaluation
+
+The retrieval pipeline was evaluated using Recall@K, Precision@K, and MRR.
+
+The evaluation compares:
+
+- Vector search
+- Cross-encoder reranked search
+
+Current evaluation uses 4 test questions from the Computer Networks PDF.
+
+### Overall Results
+
+| Metric | Vector Search | Reranked Search |
+|---|---:|---:|
+| Recall@1 | 0.2875 | 0.2375 |
+| Recall@3 | 0.5000 | 0.5625 |
+| Recall@5 | 0.6000 | 0.6125 |
+| Precision@1 | 1.0000 | 0.7500 |
+| Precision@3 | 0.7500 | 0.8333 |
+| Precision@5 | 0.6000 | 0.6000 |
+| MRR | 1.0000 | 0.8750 |
+
+Reranking improved Recall@3, Recall@5, and Precision@3, while some Top-1 metrics decreased. Results are based on a small evaluation set and will be expanded with more test questions.
 
 ## Tech Stack
 

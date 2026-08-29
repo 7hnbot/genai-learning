@@ -1,4 +1,5 @@
 import chromadb
+from sentence_transformers import CrossEncoder
 from evaluation_questions import evaluation_questions
 
 def recall_at_k(retrieved_pages, expected_pages, k):
@@ -44,6 +45,10 @@ def evaluate_question(retrieved_pages, expected_pages):
         "rr": reciprocal_rank(retrieved_pages, expected_pages)
     }
 
+reranker = CrossEncoder(
+    "cross-encoder/ms-marco-MiniLM-L-6-v2"
+)
+
 client = chromadb.PersistentClient(
     path="./04_vector_database/chroma_db"
 )
@@ -52,31 +57,136 @@ collection = client.get_collection(
     name="computer_networks_pdf"
 )
 
+all_vector_metrics = []
+all_reranked_metrics = []
+
 for item in evaluation_questions:
 
     results = collection.query(
         query_texts=[item["question"]],
-        n_results=3
+        n_results=10
     )
 
-    retrieved_pages = [
+    retrieved_documents = results["documents"][0]
+    retrieved_metadata = results["metadatas"][0]
+
+    # =========================
+    # VECTOR SEARCH RESULTS
+    # =========================
+
+    vector_pages = [
         metadata["page"]
-        for metadata in results["metadatas"][0]
+        for metadata in retrieved_metadata[:5]
     ]
 
-    metrics = evaluate_question(
-        retrieved_pages,
+    vector_metrics = evaluate_question(
+        vector_pages,
         item["expected_pages"]
     )
+
+    # =========================
+    # RERANKING
+    # =========================
+
+    pairs = [
+        [item["question"], document]
+        for document in retrieved_documents
+    ]
+
+    rerank_scores = reranker.predict(pairs)
+
+    reranked_results = list(
+        zip(
+            rerank_scores,
+            retrieved_metadata
+        )
+    )
+
+    reranked_results.sort(
+        key=lambda x: x[0],
+        reverse=True
+    )
+
+    reranked_results = reranked_results[:5]
+
+    reranked_pages = [
+        metadata["page"]
+        for score, metadata in reranked_results
+    ]
+
+    reranked_metrics = evaluate_question(
+        reranked_pages,
+        item["expected_pages"]
+    )
+
+    all_vector_metrics.append(vector_metrics)
+    all_reranked_metrics.append(reranked_metrics)
+
+    # =========================
+    # OUTPUT
+    # =========================
+
+    print("\n" + "=" * 50)
 
     print("\nQuestion:")
     print(item["question"])
 
-    print("Expected pages:")
+    print("\nExpected pages:")
     print(item["expected_pages"])
 
+
+    print("\n--- Vector Search ---")
+
     print("Retrieved pages:")
-    print(retrieved_pages)
+    print(vector_pages)
 
     print("Metrics:")
-    print(metrics)
+    print(vector_metrics)
+
+
+    print("\n--- Reranked Search ---")
+
+    print("Retrieved pages:")
+    print(reranked_pages)
+
+    print("Metrics:")
+    print(reranked_metrics)
+
+print("\n" + "=" * 50)
+print("\n===== OVERALL RESULTS =====")
+
+
+def calculate_average(metrics_list):
+    averages = {}
+
+    for key in metrics_list[0]:
+        averages[key] = sum(
+            metrics[key]
+            for metrics in metrics_list
+        ) / len(metrics_list)
+
+    return averages
+
+
+vector_averages = calculate_average(all_vector_metrics)
+reranked_averages = calculate_average(all_reranked_metrics)
+
+
+print("\n--- Vector Search Overall ---")
+
+for key, value in vector_averages.items():
+
+    if key == "rr":
+        print(f"MRR: {value:.4f}")
+    else:
+        print(f"{key}: {value:.4f}")
+
+
+print("\n--- Reranked Search Overall ---")
+
+for key, value in reranked_averages.items():
+
+    if key == "rr":
+        print(f"MRR: {value:.4f}")
+    else:
+        print(f"{key}: {value:.4f}")
