@@ -81,41 +81,28 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Tested different chunk sizes for retrieval quality
 - Tested ingestion and retrieval on a 3,000+ chunk PDF dataset
 
-## Query Expansion Experiment
+## Retrieval Strategy Comparison
 
-Query expansion was tested as an additional retrieval technique.
-
-For each user question, an LLM generated alternative versions of the original query. The original query and expanded queries were searched separately, and the retrieved candidates were combined and deduplicated before cross-encoder reranking.
-
-Pipeline:
-
-Original Question
-→ Generate alternative queries
-→ Multiple vector searches
-→ Combine candidates
-→ Deduplicate identical chunks
-→ Cross-encoder reranking
-→ Final top results
+The RAG system was evaluated using multiple retrieval strategies
 
 ### Evaluation Results
 
-| Metric | Vector Search | Reranked Search | Query Expansion + Reranking |
-|---|---:|---:|---:|
-| Recall@1 | 0.4379 | 0.5409 | 0.5591 |
-| Recall@3 | 0.6970 | 0.8409 | 0.7758 |
-| Recall@5 | 0.7939 | 0.8591 | 0.8121 |
-| Precision@1 | 0.8182 | 0.9091 | 1.0000 |
-| Precision@3 | 0.6364 | 0.7576 | 0.7576 |
-| Precision@5 | 0.4727 | 0.5091 | 0.5091 |
-| MRR | 0.9091 | 0.9545 | 1.0000 |
+| Metric | Vector Search | Reranked Search | Query Expansion + Reranking | Hybrid + Reranking |
+|---|---:|---:|---:|---:|
+| Recall@1 | 0.4379 | 0.5409 | **0.5591** | 0.5409 |
+| Recall@3 | 0.6970 | **0.8409** | 0.7758 | 0.7803 |
+| Recall@5 | 0.7939 | **0.8591** | 0.8121 | 0.7985 |
+| Precision@1 | 0.8182 | 0.9091 | **1.0000** | 0.9091 |
+| Precision@3 | 0.6364 | **0.7576** | **0.7576** | 0.7273 |
+| Precision@5 | 0.4727 | **0.5091** | **0.5091** | 0.4545 |
+| MRR | 0.9091 | 0.9545 | **1.0000** | 0.9545 |
 
-### Findings
+### Observations
 
-Query expansion improved Top-1 retrieval quality, achieving the highest Recall@1, Precision@1, and MRR.
-
-However, the standard reranking pipeline achieved better Recall@3 and Recall@5. This shows that query expansion can improve the best-ranked result but does not necessarily improve broader retrieval coverage.
-
-The experiment also showed that query expansion adds an additional LLM API call and can occasionally produce incomplete or empty responses, so fallback handling was added to prevent failures.
+- Query expansion combined with cross-encoder reranking achieved the best Recall@1 and MRR.
+- Vector search combined with reranking achieved the strongest Recall@3 and Recall@5.
+- Hybrid retrieval using BM25, vector search, Reciprocal Rank Fusion (RRF), and cross-encoder reranking produced competitive results while avoiding the additional LLM call required for query expansion.
+- The results demonstrate that a more complex retrieval pipeline does not necessarily produce better evaluation metrics.
 
 ## Tech Stack
 
