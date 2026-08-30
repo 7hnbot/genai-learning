@@ -62,6 +62,13 @@ The current implementation uses a Computer Networks PDF as the knowledge source.
 - Added cross-encoder reranking to improve retrieval relevance
 - Added reranker-based relevance filtering for insufficient-information detection
 - Evaluated retrieval using Recall@K, Precision@K, and MRR
+- Implemented BM25 keyword retrieval
+- Implemented hybrid search combining BM25 and vector search
+- Added Reciprocal Rank Fusion (RRF) for result fusion
+- Added cross-encoder reranking on hybrid candidates
+- Built an end-to-end Hybrid RAG pipeline
+- Added reranker relevance thresholding for out-of-context queries
+- Prevented irrelevant source citations when no relevant context is found
 
 ### 06 — Document Ingestion
 - Built a document ingestion pipeline
